@@ -1,0 +1,1351 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071620">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="INTERFACE LAB, l’atelier pratique de DIGITAL MINDS 06 — INTERFACE : observer, clarifier, structurer, dessiner un parcours, assembler une maquette, vérifier et tester.">
+<title>INTERFACE LAB — DIGITAL MINDS 06</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJJTlRFUkZBQ0UgTEFCIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzA3MTYyMCIvPjxyZWN0IHg9IjEwIiB5PSIxMiIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjg3YmZmIiBzdHJva2Utd2lkdGg9IjQiLz48cGF0aCBkPSJNMTggMzZsOS05IDcgNiAxMi0xMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGVhN2ZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxyZWN0IHg9IjIyIiB5PSI1MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSIjMjg3YmZmIi8+PC9zdmc+Cg==" type="image/svg+xml">
+<style>
+/* INTERFACE LAB V2 — DIGITAL MINDS 06
+   Palette (chaque couleur a une fonction) :
+   --bg      fond de page            #071620
+   --surface fond des cartes         #0F2D3B
+   --accent  action principale/focus #287BFF (bleu électrique), texte d'accent #7FB0FF
+   --accent2 repères secondaires     #8EA7FF
+   --ok / --warn / --bad  états (toujours doublés d'un mot ou d'un symbole)
+*/
+:root {
+  --bg: #071620;
+  --bg-2: #0a1d2a;
+  --surface: #0f2d3b;
+  --surface-2: #123647;
+  --line: #2a4a5c;           /* séparateurs décoratifs */
+  --control: #6c8ea3;        /* bords des contrôles : ≥ 3:1 (WCAG 1.4.11) */
+  --text: #eaf2f8;
+  --text-2: #b4c6d3;
+  --accent: #287bff;
+  --accent-solid: #1f63e0;   /* fond des boutons : 5,4:1 avec du texte blanc */
+  --accent-solid-hover: #1a56c4;
+  --accent-text: #8fbaff;
+  --accent-2: #8ea7ff;
+  --ok: #5fd68a;
+  --warn: #f2c14e;
+  --bad: #ff8f8f;
+  --focus: #ffd166;
+  --radius: 14px;
+  --radius-s: 9px;
+  --font: "Space Grotesk", "Sora", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --gutter: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 1rem; line-height: 1.6;
+  background-image: radial-gradient(1200px 500px at 85% -10%, rgba(40,123,255,.12), transparent 60%);
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+.wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding-inline: var(--gutter); }
+h1, h2, h3 { line-height: 1.2; margin: 0; letter-spacing: -.01em; }
+h1 { font-size: clamp(1.7rem, 6vw, 2.8rem); font-weight: 700; }
+h1 span { color: var(--accent-text); }
+h2 { font-size: clamp(1.45rem, 4.5vw, 2rem); font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent-text); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 8px; top: -60px; background: var(--focus); color: #111; padding: 10px 14px; border-radius: 8px; z-index: 100; font-weight: 600; }
+.skip:focus { top: 8px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+/* En-tête */
+.site-header { border-bottom: 1px solid var(--line); background: var(--bg); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brandmark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--accent-solid); color: #fff; font-weight: 700; letter-spacing: .02em; flex: none; }
+.brandtext { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.brandtext small { color: var(--text-2); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.brandtext strong { font-size: 1.1rem; letter-spacing: .06em; }
+.privacy { color: var(--text-2); font-size: .8rem; display: flex; align-items: center; gap: 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+
+/* Introduction */
+.intro { padding-block: 28px 18px; display: grid; gap: 14px; max-width: 760px; }
+.eyebrow { color: var(--accent-text); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+.lead { color: var(--text-2); font-size: 1.02rem; max-width: 68ch; }
+.lead strong { color: var(--text); }
+.lead.small { font-size: .92rem; }
+.loop { color: var(--accent-2); font-size: .82rem; letter-spacing: .04em; }
+.noscript { background: var(--surface); border: 1px solid var(--warn); padding: 14px; border-radius: var(--radius-s); margin-bottom: 16px; }
+
+/* Navigation des modules */
+.modnav { position: sticky; top: 0; z-index: 15; background: var(--bg); padding-block: 8px 10px; border-bottom: 1px solid var(--line); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x proximity; scrollbar-width: thin; }
+.tab { position: relative; flex: 0 0 auto; scroll-snap-align: start; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--control); background: var(--surface); color: var(--text); font: inherit; font-size: .92rem; cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s; }
+.tab .num { font-family: var(--mono); font-size: .75rem; color: var(--accent-text); }
+.tab:hover { border-color: var(--accent-2); }
+.tab[aria-selected="true"] { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; font-weight: 600; }
+.tab[aria-selected="true"] .num { color: #fff; }
+.tab .mark { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.tab[aria-selected="true"] .mark { background: #fff; }
+.progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.progress-text { color: var(--text-2); font-size: .82rem; }
+.progress { display: flex; gap: 4px; flex: 1 1 140px; max-width: 280px; }
+.progress i { height: 6px; flex: 1; border-radius: 3px; background: var(--line); }
+.progress i.done { background: var(--accent-2); }
+.progress i.on { background: var(--accent); }
+
+/* Modules */
+.module { padding-block: 24px 20px; scroll-margin-top: 110px; }
+.pager { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); }
+.module[hidden] { display: none; }
+.module-head { display: grid; gap: 10px; margin-bottom: 22px; max-width: 760px; }
+.module-head h2:focus { outline: none; }
+.layout { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.stack { display: grid; gap: 14px; min-width: 0; }
+.stack.tight { gap: 8px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
+.card > h3 { margin-bottom: 2px; }
+.card.stack { gap: 14px; }
+.grid-2 { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+.btnrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.hint { color: var(--text-2); font-size: .85rem; line-height: 1.45; }
+.err-text { color: var(--bad); }
+
+/* Champs */
+.field { display: grid; gap: 6px; min-width: 0; border: 0; padding: 0; margin: 0; }
+label, legend { font-size: .9rem; font-weight: 600; color: var(--text); padding: 0; }
+input[type="text"], textarea, select {
+  width: 100%; font: inherit; font-size: 1rem; color: var(--text); background: var(--bg-2);
+  border: 1px solid var(--control); border-radius: var(--radius-s); padding: 10px 12px; min-height: 44px;
+}
+textarea { resize: vertical; min-height: 88px; }
+input::placeholder, textarea::placeholder { color: #8fa4b2; }
+input[type="text"]:hover, textarea:hover, select:hover { border-color: var(--accent-2); }
+input[aria-invalid="true"] { border-color: var(--bad); }
+.colorrow { display: flex; gap: 10px; align-items: center; }
+.colorrow input[type="color"] { width: 52px; height: 44px; padding: 2px; background: var(--bg-2); border: 1px solid var(--control); border-radius: var(--radius-s); cursor: pointer; flex: none; }
+.colorrow input[type="text"] { font-family: var(--mono); max-width: 140px; }
+.colorrow output { font-family: var(--mono); color: var(--text-2); }
+
+/* Boutons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px; border-radius: var(--radius-s); border: 1px solid var(--control); background: var(--surface-2); color: var(--text); font: inherit; font-size: .95rem; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s, transform .05s; }
+.btn:hover { border-color: var(--accent-2); background: #164155; }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; }
+.btn.primary:hover { background: var(--accent-solid-hover); border-color: var(--accent-2); }
+.btn.ghost { background: transparent; }
+.btn.danger { border-color: var(--bad); color: var(--bad); background: transparent; }
+.btn.danger:hover { background: rgba(255,143,143,.12); }
+.btn.small { min-height: 44px; padding: 6px 12px; font-size: .88rem; }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.iconbtn { min-width: 44px; padding-inline: 10px; }
+
+/* Éléments répétables */
+.entry { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 12px; min-width: 0; }
+.entry-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.entry-head h3 { font-size: .98rem; }
+.entry-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.row { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); align-items: end; }
+.row-item { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-s); padding: 10px; }
+.row-item .tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 600; border: 1px solid var(--line); background: var(--bg-2); color: var(--text); }
+.pill.high { border-color: var(--bad); color: var(--bad); }
+.pill.mid { border-color: var(--warn); color: var(--warn); }
+.pill.low { border-color: var(--accent-2); color: var(--accent-2); }
+.pill.ok { border-color: var(--ok); color: var(--ok); }
+.empty { color: var(--text-2); border: 1px dashed var(--line); padding: 14px; border-radius: var(--radius-s); font-size: .92rem; }
+
+/* Segments (radios) */
+.segrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.segitem { position: relative; }
+.segitem input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.segitem span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--control); background: var(--bg-2); font-weight: 600; font-size: .92rem; }
+.segitem input:checked + span { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; }
+.segitem input:checked + span::before { content: "✓"; }
+.segitem input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: .9rem; color: var(--text-2); margin-top: 12px; cursor: pointer; }
+.check input { width: 22px; height: 22px; margin: 1px 0 0; flex: none; accent-color: var(--accent); }
+.check small { color: var(--text-2); }
+
+/* Résultats, synthèses */
+.result { display: grid; gap: 10px; font-size: .96rem; }
+.result p { color: var(--text); }
+.result .label { color: var(--accent-text); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.result .quote { border-left: 3px solid var(--accent); padding-left: 12px; }
+.result .muted { color: var(--text-2); }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.checklist li { display: flex; gap: 10px; align-items: flex-start; font-size: .9rem; }
+.badge { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 64px; padding: 2px 8px; border-radius: 6px; font-size: .72rem; font-weight: 700; border: 1px solid; letter-spacing: .02em; }
+.badge.ok { color: var(--ok); border-color: var(--ok); }
+.badge.warn { color: var(--warn); border-color: var(--warn); }
+.badge.bad { color: var(--bad); border-color: var(--bad); }
+.badge.na { color: var(--text-2); border-color: var(--line); }
+.plain { margin: 0; padding-left: 1.3rem; display: grid; gap: 4px; }
+.navplan { display: grid; gap: 12px; }
+.navplan h4 { margin: 0 0 4px; font-size: .92rem; color: var(--accent-text); }
+.navplan ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 2px; font-size: .92rem; }
+
+/* Parcours */
+.flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.flow li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding-bottom: 12px; position: relative; font-size: .9rem; }
+.flow li::before { content: attr(data-n); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent-solid); color: #fff; font-weight: 700; font-size: .8rem; z-index: 1; }
+.flow li::after { content: ""; position: absolute; left: 13px; top: 28px; bottom: 0; width: 2px; background: var(--line); }
+.flow li:last-child::after { display: none; }
+.flow .recov { color: var(--text-2); font-size: .82rem; display: block; }
+
+/* Contraste */
+.sample { border: 1px solid var(--line); border-radius: var(--radius-s); padding: 18px; display: grid; gap: 8px; overflow-wrap: anywhere; }
+.sample-large { font-size: 1.5rem; font-weight: 600; }
+.sample-ui { display: inline-block; justify-self: start; border: 2px solid currentColor; border-radius: 8px; padding: 6px 12px; font-weight: 600; }
+.ratio { font-size: 2.4rem; font-weight: 700; font-family: var(--mono); line-height: 1.1; }
+.crit { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.crit li { display: flex; gap: 10px; align-items: center; font-size: .9rem; }
+
+/* Maquette */
+.wide-preview { grid-template-columns: minmax(0, 1fr); }
+.preview-card { background: #0a1d2a; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.preview-bar { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: .72rem; letter-spacing: .12em; color: var(--text-2); flex-wrap: wrap; }
+.preview-note { padding: 10px 14px; border-top: 1px solid var(--line); font-size: .82rem; color: var(--text-2); }
+.wf-stage { padding: 16px; display: flex; justify-content: center; overflow: hidden; background: repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 10px, transparent 10px 20px); }
+.wf { background: #f4f6f8; color: #11202b; border-radius: 12px; padding: 18px; width: 100%; display: grid; gap: 14px; transition: max-width .2s; border: 1px solid #c8d3db; }
+.wf.is-mobile { max-width: 360px; }
+.wf.is-wide { max-width: 760px; }
+.wf-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; font-weight: 700; font-size: .85rem; color: #35505f; }
+.wf-head .nav { display: flex; gap: 6px; }
+.wf-head .nav i { display: block; width: 28px; height: 6px; border-radius: 3px; background: #aab9c4; }
+.wf h4 { margin: 0; font-size: 1.35rem; line-height: 1.2; color: #0b1a24; }
+.wf.is-wide h4 { font-size: 1.7rem; }
+.wf .desc { color: #35505f; font-size: .95rem; overflow-wrap: anywhere; }
+.wf-cta { justify-self: start; display: inline-flex; align-items: center; border-radius: 10px; padding: 10px 18px; font-weight: 700; font-size: 1rem; min-height: 44px; border: 1px solid rgba(0,0,0,.15); }
+.wf-cards { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.wf.is-wide .wf-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.wf-card { border: 1.5px dashed #8aa0af; border-radius: 10px; padding: 12px; display: grid; gap: 6px; background: #fff; }
+.wf-card b { font-size: .92rem; }
+.wf-card span { font-size: .8rem; color: #4a6372; }
+.wf-bar { height: 8px; border-radius: 4px; background: #c8d3db; }
+.wf-bar.short { width: 60%; }
+.wf-block { border: 1.5px dashed #8aa0af; border-radius: 10px; padding: 12px; background: #fff; font-size: .9rem; color: #1b2f3b; }
+.wf-block small { display: block; color: #4a6372; margin-top: 2px; }
+.wf-help { font-size: .85rem; color: #35505f; border-top: 1px solid #c8d3db; padding-top: 10px; }
+.blockrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-s); padding: 6px 8px 6px 10px; }
+.blockrow label { flex: 1 1 180px; min-width: 0; display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 500; cursor: pointer; }
+.blockrow input { width: 22px; height: 22px; accent-color: var(--accent); flex: none; }
+
+/* Test */
+.split { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.pane { border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.pane.fact { background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--ok); }
+.pane.hypo { background: var(--surface); border: 1px dashed var(--accent-2); border-left: 6px solid var(--accent-2); }
+.tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: .74rem; letter-spacing: .1em; font-weight: 700; border: 1px solid; }
+.pane.fact .tag { color: var(--ok); border-color: var(--ok); }
+.pane.hypo .tag { color: var(--accent-2); border-color: var(--accent-2); }
+
+/* Journal, pied de page */
+.journal { margin-block: 12px 40px; display: grid; gap: 14px; }
+.site-footer { border-top: 1px solid var(--line); padding-block: 24px 40px; color: var(--text-2); font-size: .85rem; }
+.footer-inner { display: grid; gap: 12px; }
+.footer-inner strong { color: var(--text); }
+
+/* Toast, dialogue */
+.toast { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); background: #0b2330; border: 1px solid var(--accent-2); color: var(--text); padding: 12px 14px; border-radius: var(--radius-s); display: flex; gap: 12px; align-items: center; z-index: 50; max-width: calc(100vw - 24px); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.toast[hidden] { display: none; }
+.toast.err { border-color: var(--bad); }
+dialog { background: var(--surface); color: var(--text); border: 1px solid var(--accent-2); border-radius: var(--radius); padding: 20px; max-width: min(92vw, 440px); }
+dialog::backdrop { background: rgba(3,10,15,.75); }
+dialog form { display: grid; gap: 14px; }
+dialog p { color: var(--text-2); }
+
+/* Écrans larges */
+@media (min-width: 720px) {
+  :root { --gutter: 28px; }
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .split { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 980px) {
+  .layout { grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr); }
+  .layout.wide-preview { grid-template-columns: minmax(300px, 1fr) minmax(0, 1.5fr); }
+  .tabs { overflow: visible; flex-wrap: wrap; }
+}
+@media (max-width: 420px) {
+  .privacy { font-size: .74rem; }
+  .btn { width: 100%; }
+  .btnrow .btn.small, .entry-tools .btn, .row-item .tools .btn { width: auto; }
+  .tab { padding-inline: 12px; font-size: .88rem; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brandmark" aria-hidden="true">DM</span>
+      <span class="brandtext"><small>Digital Minds · Volume 06</small><strong>INTERFACE LAB</strong></span>
+    </div>
+    <p class="privacy"><span class="dot" aria-hidden="true"></span>Travail local · sans compte · rien n’est envoyé</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="intro" aria-labelledby="intro-title">
+    <p class="eyebrow">L’atelier pratique du livre</p>
+    <h1 id="intro-title">Observe, clarifie, teste. <span>Conçois pour l’usage.</span></h1>
+    <p class="lead">Sept modules pour travailler une petite interface fictive, <strong>Passerelle</strong>, ou ton propre projet. Chaque module sépare ce que tu sais de ce que tu supposes. Aucune note, aucun niveau verrouillé : tu peux ouvrir les modules dans l’ordre que tu veux.</p>
+    <p class="loop" aria-label="Boucle de travail">Observer → Clarifier → Structurer → Parcours &amp; états → Maquette → Vérifier → Tester &amp; améliorer</p>
+  </section>
+
+  <noscript><p class="noscript">INTERFACE LAB a besoin de JavaScript pour fonctionner. Active-le dans ton navigateur, ou utilise les feuilles imprimables des bonus du livre.</p></noscript>
+
+  <nav class="modnav" aria-label="Modules du Lab">
+    <div class="tabs" role="tablist" aria-label="Les 7 modules">
+      <button type="button" role="tab" class="tab" id="tab-observer" aria-controls="panel-observer" aria-selected="true"><span class="num">01</span><span class="name">Observer</span><span class="mark" hidden><span class="sr-only"> (contient des notes)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-clarifier" aria-controls="panel-clarifier" aria-selected="false" tabindex="-1"><span class="num">02</span><span class="name">Clarifier</span><span class="mark" hidden><span class="sr-only"> (contient des notes)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-structurer" aria-controls="panel-structurer" aria-selected="false" tabindex="-1"><span class="num">03</span><span class="name">Structurer</span><span class="mark" hidden><span class="sr-only"> (contient des notes)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-parcours" aria-controls="panel-parcours" aria-selected="false" tabindex="-1"><span class="num">04</span><span class="name">Parcours &amp; états</span><span class="mark" hidden><span class="sr-only"> (modifié)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-maquette" aria-controls="panel-maquette" aria-selected="false" tabindex="-1"><span class="num">05</span><span class="name">Maquette</span><span class="mark" hidden><span class="sr-only"> (modifié)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-verifier" aria-controls="panel-verifier" aria-selected="false" tabindex="-1"><span class="num">06</span><span class="name">Vérifier</span><span class="mark" hidden><span class="sr-only"> (contient des notes)</span></span></button>
+      <button type="button" role="tab" class="tab" id="tab-tester" aria-controls="panel-tester" aria-selected="false" tabindex="-1"><span class="num">07</span><span class="name">Tester &amp; améliorer</span><span class="mark" hidden><span class="sr-only"> (contient des notes)</span></span></button>
+    </div>
+    <div class="progress-row">
+      <p class="progress-text" id="progress-text">Module 1 sur 7 · Observer</p>
+      <div class="progress" id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- 01 OBSERVER -->
+    <section id="panel-observer" class="module" role="tabpanel" aria-labelledby="tab-observer" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 01 · Livre : chapitres 1 et 2</p>
+        <h2 tabindex="-1">Observer</h2>
+        <p class="lead">Note ce que tu vois sur une interface, pas ce que tu en penses. Sépare le <strong>fait</strong> (ce que tu as vu ou entendu) de l’<strong>hypothèse</strong> (ce que tu en conclus, et qu’il reste à vérifier).</p>
+      </header>
+      <div class="layout">
+        <div class="stack">
+          <div id="obs-list" class="stack"></div>
+          <div class="btnrow"><button type="button" class="btn" id="obs-add">+ Ajouter une observation</button></div>
+        </div>
+        <aside class="card sticky" aria-labelledby="obs-sum-title">
+          <h3 id="obs-sum-title">À vérifier d’abord</h3>
+          <p class="hint">La priorité sert à choisir quoi vérifier en premier. Elle ne remplace pas un test.</p>
+          <div id="obs-summary" aria-live="polite"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 02 CLARIFIER -->
+    <section id="panel-clarifier" class="module" role="tabpanel" aria-labelledby="tab-clarifier" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 02 · Livre : chapitres 3 et 4</p>
+        <h2 tabindex="-1">Clarifier</h2>
+        <p class="lead">Transforme une remarque vague (« la page est confuse ») en un problème précis, centré sur une personne, avec un critère de réussite que tu peux observer. Ne décris pas encore la solution.</p>
+      </header>
+      <div class="layout">
+        <div class="card stack">
+          <div class="field"><label for="cl-contexte">Contexte</label><input type="text" id="cl-contexte" data-bind="clarifier.contexte" maxlength="300" autocomplete="off" aria-describedby="h-cl-contexte"><p class="hint" id="h-cl-contexte">Où, sur quel appareil, dans quelle situation. Exemple : sur téléphone, connexion parfois lente.</p></div>
+          <div class="field"><label for="cl-personne">Personne concernée</label><input type="text" id="cl-personne" data-bind="clarifier.personne" maxlength="300" autocomplete="off" aria-describedby="h-cl-personne"><p class="hint" id="h-cl-personne">Décris une situation, pas un cliché. Exemple : une personne qui découvre le numérique.</p></div>
+          <div class="field"><label for="cl-objectif">Objectif de la personne</label><input type="text" id="cl-objectif" data-bind="clarifier.objectif" maxlength="300" autocomplete="off" aria-describedby="h-cl-objectif"><p class="hint" id="h-cl-objectif">Commence par un verbe à l’infinitif. Exemple : comparer deux ressources et choisir une prochaine étape.</p></div>
+          <div class="field"><label for="cl-contrainte">Contrainte</label><input type="text" id="cl-contrainte" data-bind="clarifier.contrainte" maxlength="300" autocomplete="off" aria-describedby="h-cl-contrainte"><p class="hint" id="h-cl-contrainte">Temps, écran, connexion, langue, vocabulaire, accessibilité…</p></div>
+          <div class="field"><label for="cl-critere">Critère de réussite</label><textarea id="cl-critere" data-bind="clarifier.critere" maxlength="500" rows="3" aria-describedby="h-cl-critere"></textarea><p class="hint" id="h-cl-critere">Une action que tu peux observer. Exemple : elle choisit une ressource et dit où elle la retrouvera, sans aide.</p></div>
+        </div>
+        <aside class="card sticky" aria-labelledby="cl-out-title">
+          <h3 id="cl-out-title">Énoncé du problème</h3>
+          <div id="cl-output" class="result" aria-live="polite"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 03 STRUCTURER -->
+    <section id="panel-structurer" class="module" role="tabpanel" aria-labelledby="tab-structurer" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 03 · Livre : chapitres 5, 6, 7 et 14</p>
+        <h2 tabindex="-1">Structurer</h2>
+        <p class="lead">Liste les contenus, range-les en quelques catégories avec des mots courants, puis écris les petits textes essentiels. Ce n’est pas un outil complet d’architecture de l’information : c’est un premier brouillon à tester avec quelqu’un.</p>
+      </header>
+      <div class="layout">
+        <div class="stack">
+          <div class="card stack">
+            <h3>1. Catégories</h3>
+            <p class="hint">Trois à six catégories, nommées avec des mots que la personne emploie.</p>
+            <div id="st-cats" class="stack tight"></div>
+            <div class="btnrow"><button type="button" class="btn" id="st-cat-add">+ Ajouter une catégorie</button></div>
+            <p class="hint" id="st-cat-count" aria-live="polite"></p>
+          </div>
+          <div class="card stack">
+            <h3>2. Contenus et ordre</h3>
+            <p class="hint">Un contenu = un libellé que la personne verra. Range-le dans une catégorie et classe-les dans l’ordre où elle les cherche.</p>
+            <div id="st-items" class="stack tight"></div>
+            <div class="btnrow"><button type="button" class="btn" id="st-item-add">+ Ajouter un contenu</button></div>
+          </div>
+          <div class="card stack">
+            <h3>3. Microcopy essentielle</h3>
+            <div class="field"><label for="st-m-action">Libellé de l’action principale</label><input type="text" id="st-m-action" data-bind="structurer.micro.action" maxlength="80" autocomplete="off"></div>
+            <div class="field"><label for="st-m-succes">Message après une réussite</label><input type="text" id="st-m-succes" data-bind="structurer.micro.succes" maxlength="200" autocomplete="off"><p class="hint">Dis ce qui s’est passé et où retrouver le résultat.</p></div>
+            <div class="field"><label for="st-m-erreur">Message après un échec</label><input type="text" id="st-m-erreur" data-bind="structurer.micro.erreur" maxlength="200" autocomplete="off"><p class="hint">Dis ce qui bloque et ce qu’on peut faire ensuite, sans blâmer.</p></div>
+            <div class="field"><label for="st-m-vide">Message quand il n’y a aucun résultat</label><input type="text" id="st-m-vide" data-bind="structurer.micro.vide" maxlength="200" autocomplete="off"><p class="hint">Propose deux issues : changer l’objectif ou effacer les filtres, par exemple.</p></div>
+          </div>
+        </div>
+        <aside class="stack sticky">
+          <div class="card" aria-labelledby="st-prev-title">
+            <h3 id="st-prev-title">Plan de navigation</h3>
+            <div id="st-preview" aria-live="polite"></div>
+          </div>
+          <div class="card" aria-labelledby="st-check-title">
+            <h3 id="st-check-title">Points à relire</h3>
+            <div id="st-checks" aria-live="polite"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 04 PARCOURS & ETATS -->
+    <section id="panel-parcours" class="module" role="tabpanel" aria-labelledby="tab-parcours" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 04 · Livre : chapitres 8, 13 et 22</p>
+        <h2 tabindex="-1">Parcours &amp; états</h2>
+        <p class="lead">Décris les étapes d’une tâche, ce que le système répond, ce qui peut mal se passer et comment la personne récupère. Le modèle ci-dessous est celui de Passerelle : modifie-le, ajoute des étapes, déplace-les.</p>
+      </header>
+      <div class="layout">
+        <div class="stack">
+          <div class="card stack">
+            <div class="field"><label for="pa-objectif">Objectif de la personne</label><input type="text" id="pa-objectif" data-bind="parcours.objectif" maxlength="300" autocomplete="off"></div>
+            <div class="field"><label for="pa-depart">Point de départ</label><input type="text" id="pa-depart" data-bind="parcours.depart" maxlength="200" autocomplete="off"></div>
+          </div>
+          <div id="pa-steps" class="stack"></div>
+          <div class="btnrow"><button type="button" class="btn" id="pa-add">+ Ajouter une étape</button></div>
+          <p class="hint" id="pa-count" aria-live="polite"></p>
+        </div>
+        <aside class="stack sticky">
+          <div class="card" aria-labelledby="pa-prev-title">
+            <h3 id="pa-prev-title">Ton parcours</h3>
+            <div id="pa-preview"></div>
+          </div>
+          <div class="card" aria-labelledby="pa-check-title">
+            <h3 id="pa-check-title">Impasses possibles</h3>
+            <div id="pa-checks" aria-live="polite"></div>
+            <div class="btnrow"><button type="button" class="btn ghost" id="pa-copy">Copier le résumé</button></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 05 MAQUETTE -->
+    <section id="panel-maquette" class="module" role="tabpanel" aria-labelledby="tab-maquette" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 05 · Livre : chapitres 9, 10, 12 et 16</p>
+        <h2 tabindex="-1">Maquette</h2>
+        <p class="lead">Une seule maquette basse fidélité. Change le texte, l’action principale, l’ordre et la taille d’écran pour vérifier la hiérarchie avant de penser aux détails visuels. Le contenu des ressources est fictif.</p>
+      </header>
+      <div class="layout wide-preview">
+        <div class="card stack">
+          <div class="field"><label for="mq-titre">Titre principal</label><input type="text" id="mq-titre" data-bind="maquette.titre" maxlength="120" autocomplete="off"></div>
+          <div class="field"><label for="mq-desc">Phrase d’explication</label><textarea id="mq-desc" data-bind="maquette.description" maxlength="300" rows="3"></textarea></div>
+          <div class="field"><label for="mq-cta">Libellé de l’action principale</label><input type="text" id="mq-cta" data-bind="maquette.cta" maxlength="60" autocomplete="off"></div>
+          <div class="field">
+            <label for="mq-accent">Couleur de l’action principale</label>
+            <div class="colorrow"><input type="color" id="mq-accent" data-bind="maquette.accent"><output id="mq-accent-out" for="mq-accent"></output></div>
+            <p class="hint" id="mq-contrast" aria-live="polite"></p>
+          </div>
+          <fieldset class="field seg">
+            <legend>Taille d’écran</legend>
+            <div class="segrow">
+              <label class="segitem"><input type="radio" name="mq-vue" value="mobile" data-bind="maquette.vue"><span>Téléphone</span></label>
+              <label class="segitem"><input type="radio" name="mq-vue" value="wide" data-bind="maquette.vue"><span>Ordinateur</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="field">
+            <legend>Blocs affichés et leur ordre</legend>
+            <div id="mq-blocks" class="stack tight"></div>
+          </fieldset>
+        </div>
+        <div class="stack">
+          <div class="preview-card">
+            <div class="preview-bar"><span>APERÇU LOCAL</span><span id="wf-label">TÉLÉPHONE · ~360 PX</span></div>
+            <div class="wf-stage"><div id="wf" class="wf is-mobile" role="group" aria-label="Aperçu de la maquette"></div></div>
+            <p class="preview-note">Une maquette lisible ne prouve pas encore que le parcours est compris : il faut la faire essayer.</p>
+          </div>
+          <div class="card">
+            <h3>Ordre de lecture</h3>
+            <ol id="mq-order" class="plain"></ol>
+          </div>
+          <div class="field card">
+            <label for="mq-question">Question à poser à une personne</label>
+            <textarea id="mq-question" data-bind="maquette.question" maxlength="300" rows="2"></textarea>
+            <p class="hint">Exemple : « Montre-moi comment tu choisirais une première ressource. »</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 VERIFIER -->
+    <section id="panel-verifier" class="module" role="tabpanel" aria-labelledby="tab-verifier" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 06 · Livre : chapitres 15, 17, 18 et 19</p>
+        <h2 tabindex="-1">Vérifier</h2>
+        <p class="lead">Un calcul de contraste et une liste de vérifications manuelles. C’est un premier contrôle : ce n’est <strong>pas</strong> un audit WCAG complet et il ne remplace pas un test avec des personnes.</p>
+      </header>
+      <div class="layout">
+        <div class="stack">
+          <div class="card stack">
+            <h3>Contraste texte / fond</h3>
+            <div class="grid-2 tight">
+              <div class="field"><label for="ct-fg-hex">Couleur du texte</label><div class="colorrow"><input type="color" id="ct-fg" aria-label="Choisir la couleur du texte"><input type="text" id="ct-fg-hex" maxlength="7" autocomplete="off" spellcheck="false" aria-describedby="ct-fg-err" aria-invalid="false"></div><p class="hint err-text" id="ct-fg-err" hidden></p></div>
+              <div class="field"><label for="ct-bg-hex">Couleur du fond</label><div class="colorrow"><input type="color" id="ct-bg" aria-label="Choisir la couleur du fond"><input type="text" id="ct-bg-hex" maxlength="7" autocomplete="off" spellcheck="false" aria-describedby="ct-bg-err" aria-invalid="false"></div><p class="hint err-text" id="ct-bg-err" hidden></p></div>
+            </div>
+            <div class="btnrow"><button type="button" class="btn" id="ct-swap">Inverser texte et fond</button></div>
+            <div class="sample" id="ct-sample">
+              <p class="sample-text">Texte courant de 16 px, lisible ?</p>
+              <p class="sample-large">Grand texte de 24 px</p>
+              <span class="sample-ui">Contour d’un contrôle</span>
+            </div>
+            <div class="ratio-row"><div><span class="hint">Rapport de contraste</span><div class="ratio" id="ct-ratio" aria-live="polite">—</div></div></div>
+            <ul class="crit" id="ct-crit" aria-live="polite"></ul>
+            <div id="ct-suggest" aria-live="polite"></div>
+            <p class="hint">Calcul fondé sur la luminance relative définie par les WCAG 2.2. Il ne tient compte ni de la taille réelle, ni de la police, ni du contexte : confirme à l’œil, sur appareil.</p>
+          </div>
+          <div class="card stack">
+            <h3>Vérifications manuelles</h3>
+            <p class="hint">Fais chaque vérification toi-même sur ta maquette ou ton prototype. « Non vérifié » est une réponse honnête.</p>
+            <div id="vf-checks" class="stack tight"></div>
+            <div class="field"><label for="vf-notes">Notes et barrières repérées</label><textarea id="vf-notes" data-bind="verifier.notes" maxlength="800" rows="3"></textarea></div>
+          </div>
+        </div>
+        <aside class="card sticky" aria-labelledby="vf-sum-title">
+          <h3 id="vf-sum-title">Où tu en es</h3>
+          <div id="vf-summary" aria-live="polite"></div>
+          <p class="hint">Ce bilan n’est pas un score : il compte seulement ce que tu as vérifié. Le bonus 3 du livre propose la même liste à imprimer.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 07 TESTER -->
+    <section id="panel-tester" class="module" role="tabpanel" aria-labelledby="tab-tester" hidden>
+      <header class="module-head">
+        <p class="eyebrow">Module 07 · Livre : chapitres 20 et 21</p>
+        <h2 tabindex="-1">Tester &amp; améliorer</h2>
+        <p class="lead">Observe une personne qui essaie d’accomplir une tâche. Tu ne la notes pas et tu ne lui souffles pas la solution : tu consignes ce qui s’est passé, puis, séparément, ce que tu en penses.</p>
+      </header>
+      <div class="stack">
+        <div class="card stack">
+          <div class="field"><label for="te-tache">Consigne donnée à la personne</label><textarea id="te-tache" data-bind="tester.tache" maxlength="500" rows="3" aria-describedby="h-te-tache"></textarea><p class="hint" id="h-te-tache">Elle décrit le résultat attendu, pas l’endroit où cliquer.</p></div>
+          <div class="field"><label for="te-contexte">Contexte du test (facultatif)</label><input type="text" id="te-contexte" data-bind="tester.contexte" maxlength="200" autocomplete="off"><p class="hint">Appareil, lumière, connexion, durée…</p></div>
+          <fieldset class="field seg">
+            <legend>Résultat observé</legend>
+            <div class="segrow">
+              <label class="segitem"><input type="radio" name="te-resultat" value="reussite" data-bind="tester.resultat"><span>Réussite</span></label>
+              <label class="segitem"><input type="radio" name="te-resultat" value="hesitation" data-bind="tester.resultat"><span>Hésitation</span></label>
+              <label class="segitem"><input type="radio" name="te-resultat" value="blocage" data-bind="tester.resultat"><span>Blocage</span></label>
+              <label class="segitem"><input type="radio" name="te-resultat" value="incertain" data-bind="tester.resultat"><span>Incertain</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="split">
+          <section class="pane fact" aria-labelledby="te-fact-title">
+            <h3 id="te-fact-title"><span class="tag">OBSERVATION / FAIT</span></h3>
+            <p class="hint">Ce qui s’est passé, sans jugement.</p>
+            <div class="field"><label for="te-fait">Fait observé</label><textarea id="te-fait" data-bind="tester.fait" maxlength="600" rows="4"></textarea></div>
+            <div class="field"><label for="te-citation">Paroles de la personne (si elle accepte)</label><textarea id="te-citation" data-bind="tester.citation" maxlength="400" rows="2"></textarea></div>
+            <div class="field"><label for="te-aide">Aide donnée pendant le test</label><textarea id="te-aide" data-bind="tester.aide" maxlength="400" rows="2"></textarea></div>
+          </section>
+          <section class="pane hypo" aria-labelledby="te-hypo-title">
+            <h3 id="te-hypo-title"><span class="tag">INTERPRÉTATION</span></h3>
+            <p class="hint">Ce que tu en penses : une hypothèse à vérifier, pas un fait.</p>
+            <div class="field"><label for="te-interp">Interprétation possible</label><textarea id="te-interp" data-bind="tester.interpretation" maxlength="600" rows="3"></textarea></div>
+            <div class="field"><label for="te-amelio">Prochaine amélioration à essayer</label><textarea id="te-amelio" data-bind="tester.amelioration" maxlength="400" rows="2"></textarea></div>
+            <div class="field"><label for="te-verif">Comment vérifier qu’elle aide ?</label><textarea id="te-verif" data-bind="tester.verification" maxlength="400" rows="2"></textarea></div>
+          </section>
+        </div>
+        <div class="card" aria-labelledby="te-syn-title">
+          <h3 id="te-syn-title">Synthèse du test</h3>
+          <div id="te-synthese" class="result" aria-live="polite"></div>
+          <div class="btnrow"><button type="button" class="btn" id="te-copy">Copier la synthèse</button></div>
+          <p class="hint">Un essai révèle des questions : il ne prouve pas que l’interface convient à tout le monde.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <section class="card journal" aria-labelledby="journal-title">
+    <h2 id="journal-title">Ton journal de travail</h2>
+    <p class="lead small">Tes saisies restent dans ton navigateur et ne sont jamais envoyées. Par défaut, elles disparaissent à la fermeture de l’onglet. Exporte ton journal pour en garder une copie ou le reprendre plus tard ; relis-le avant de le partager.</p>
+    <div class="btnrow">
+      <button type="button" class="btn primary" id="export-json">Exporter (JSON)</button>
+      <button type="button" class="btn" id="export-md">Exporter (Markdown)</button>
+      <button type="button" class="btn" id="import-btn">Importer un journal</button>
+      <button type="button" class="btn danger" id="clear-all">Tout effacer</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+    </div>
+    <label class="check"><input type="checkbox" id="keep"><span>Garder mes notes sur cet appareil, même après avoir fermé l’onglet <small>(à éviter sur un ordinateur partagé)</small></span></label>
+    <p class="hint" id="save-status" aria-live="polite"></p>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p><strong>DIGITAL MINDS 06 — INTERFACE</strong><br>Kisito PRUDENCIO</p>
+    <p>Atelier pédagogique autonome. Aucun compte, aucune collecte, aucun suivi.<br>Les résultats sont des aides à la réflexion : ils ne certifient ni la conformité WCAG ni une compétence.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  <span id="toast-text"></span>
+  <button type="button" class="btn small" id="toast-undo" hidden>Annuler</button>
+</div>
+
+<dialog id="confirm" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+  <form method="dialog">
+    <h2 id="confirm-title">Confirmer</h2>
+    <p id="confirm-text"></p>
+    <div class="btnrow">
+      <button type="submit" class="btn" value="cancel" id="confirm-cancel">Annuler</button>
+      <button type="submit" class="btn danger" value="ok" id="confirm-ok">Confirmer</button>
+    </div>
+  </form>
+</dialog>
+<script>
+/* INTERFACE LAB V2 — DIGITAL MINDS 06
+   JavaScript vanilla, sans dépendance, sans réseau. Les saisies restent dans le navigateur. */
+(() => {
+  "use strict";
+
+  /* ---------- Utilitaires ---------- */
+  const MODULES = [
+    { id: "observer", label: "Observer" },
+    { id: "clarifier", label: "Clarifier" },
+    { id: "structurer", label: "Structurer" },
+    { id: "parcours", label: "Parcours & états" },
+    { id: "maquette", label: "Maquette" },
+    { id: "verifier", label: "Vérifier" },
+    { id: "tester", label: "Tester & améliorer" }
+  ];
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const uid = () => "n" + Math.random().toString(36).slice(2, 9);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const get = (o, p) => p.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
+  const set = (o, p, v) => { const ks = p.split("."); const l = ks.pop(); ks.reduce((a, k) => a[k], o)[l] = v; };
+  const str = (v, max) => (typeof v === "string" ? v.slice(0, max || 600) : "");
+  const obj = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+  const clone = (x) => JSON.parse(JSON.stringify(x));
+
+  /* ---------- Modèle de départ : Passerelle (fictif) ---------- */
+  const BLOCK_DEFS = [
+    { id: "cards", label: "Trois cartes de ressources" },
+    { id: "compare", label: "Bloc « Comparer les options »" },
+    { id: "help", label: "Aide / sortie de secours" },
+    { id: "next", label: "Prochaine étape gardée" }
+  ];
+  const VF_CHECKS = [
+    { id: "lisible", q: "Le texte courant est lisible sur petit écran (16 px ou plus) et le fond ne gêne pas la lecture." },
+    { id: "intitules", q: "Chaque bouton et chaque lien a un intitulé qui dit ce qui va se passer." },
+    { id: "labels", q: "Chaque champ a un label visible, pas seulement un texte d’exemple dans le champ." },
+    { id: "couleur", q: "Aucune information importante n’est portée par la seule couleur." },
+    { id: "clavier", q: "Tout le parcours s’utilise au clavier (Tab, Maj+Tab, Entrée, Espace) et on peut en sortir." },
+    { id: "focus", q: "Le contrôle actif est nettement visible quand on navigue au clavier." },
+    { id: "tactile", q: "Les zones à toucher font environ 44 × 44 px, avec de l’espace entre elles." },
+    { id: "ordre", q: "L’ordre de lecture et de tabulation suit l’ordre logique de la tâche." },
+    { id: "erreurs", q: "Chaque message d’erreur dit ce qui bloque et comment avancer." },
+    { id: "zoom", q: "La page reste utilisable avec le texte agrandi (200 %) et sans défilement horizontal." }
+  ];
+
+  function defaults() {
+    return {
+      observer: { items: [{
+        id: "o1", ex: true,
+        situation: "Une personne ouvre l’accueil de Passerelle sur son téléphone.",
+        action: "Elle cherche par où commencer.",
+        friction: "Vingt cartes sans repère : elle remonte puis redescend la page.",
+        fait: "Elle a fait défiler la liste trois fois et ouvert deux cartes sans en lire une jusqu’au bout.",
+        hypothese: "Les titres de catégories ne sont peut-être pas compris.",
+        priorite: "haute"
+      }] },
+      clarifier: { contexte: "", personne: "", objectif: "", contrainte: "", critere: "" },
+      structurer: {
+        cats: [
+          { id: "c1", name: "Explorer" }, { id: "c2", name: "Apprendre" },
+          { id: "c3", name: "Pratiquer" }, { id: "c4", name: "Continuer" }
+        ],
+        items: [
+          { id: "i1", label: "Voir les voies possibles", cat: "c1" },
+          { id: "i2", label: "Lire un guide pour débuter", cat: "c2" },
+          { id: "i3", label: "Essayer un petit exercice", cat: "c3" },
+          { id: "i4", label: "Retrouver mes ressources gardées", cat: "c4" }
+        ],
+        micro: {
+          action: "Choisir un objectif",
+          succes: "Ressource gardée. Tu la retrouveras dans Mes ressources.",
+          erreur: "Impossible de garder cette ressource. Réessaie : tes choix sont conservés.",
+          vide: "Aucune ressource ne correspond. Change d’objectif ou efface les filtres."
+        }
+      },
+      parcours: {
+        objectif: "Trouver une ressource pour débuter et garder une prochaine étape.",
+        depart: "Accueil de Passerelle",
+        steps: [
+          { id: "s1", nom: "Choisir un objectif", action: "Choisit un objectif parmi trois.", resultat: "Voit trois ressources adaptées.", reponse: "Affiche la liste et mémorise l’objectif choisi.", probleme: "Aucune ressource ne correspond.", recup: "Proposer d’élargir ou de changer d’objectif." },
+          { id: "s2", nom: "Comparer", action: "Ouvre la comparaison de deux ressources.", resultat: "Voit niveau, durée et format côte à côte.", reponse: "Affiche un tableau simple.", probleme: "Les deux ressources paraissent identiques.", recup: "Mettre en avant ce qui change entre elles." },
+          { id: "s3", nom: "Garder une prochaine étape", action: "Appuie sur « Garder cette étape ».", resultat: "Sait où retrouver sa ressource.", reponse: "Confirme et indique où la retrouver.", probleme: "L’enregistrement échoue.", recup: "Afficher une erreur claire et permettre de réessayer sans perdre ses choix." }
+        ]
+      },
+      maquette: {
+        titre: "Trouve une première ressource pour apprendre",
+        description: "Choisis un objectif. Passerelle te montre quelques ressources à comparer, puis tu gardes ta prochaine étape.",
+        cta: "Choisir un objectif",
+        accent: "#1f63e0",
+        vue: "mobile",
+        question: "Montre-moi comment tu choisirais une première ressource.",
+        blocks: BLOCK_DEFS.map((b, i) => ({ id: b.id, on: i < 3 }))
+      },
+      verifier: { checks: {}, notes: "", ct: { fg: "#eaf2f8", bg: "#0f2d3b" } },
+      tester: { tache: "", contexte: "", resultat: "", fait: "", citation: "", aide: "", interpretation: "", amelioration: "", verification: "" }
+    };
+  }
+
+  /* ---------- Nettoyage d’un journal importé ---------- */
+  const HEX6 = /^#[0-9a-fA-F]{6}$/;
+  function sanitize(x) {
+    const s = defaults();
+    x = obj(x);
+    const ob = obj(x.observer);
+    if (Array.isArray(ob.items)) {
+      s.observer.items = ob.items.slice(0, 40).map((i) => { i = obj(i); return {
+        id: uid(), ex: false, situation: str(i.situation, 300), action: str(i.action, 300), friction: str(i.friction, 400),
+        fait: str(i.fait, 600), hypothese: str(i.hypothese, 600),
+        priorite: ["haute", "moyenne", "basse"].includes(i.priorite) ? i.priorite : "moyenne" }; });
+    }
+    const cl = obj(x.clarifier);
+    ["contexte", "personne", "objectif", "contrainte"].forEach((k) => { if (k in cl) s.clarifier[k] = str(cl[k], 300); });
+    if ("critere" in cl) s.clarifier.critere = str(cl.critere, 500);
+    const st = obj(x.structurer);
+    if (Array.isArray(st.cats)) {
+      s.structurer.cats = st.cats.slice(0, 12).map((c, n) => ({ id: str(obj(c).id, 20) || "c" + n + uid(), name: str(obj(c).name, 40) }));
+      const ids = new Set(s.structurer.cats.map((c) => c.id));
+      if (ids.size !== s.structurer.cats.length) s.structurer.cats.forEach((c, n) => { c.id = "c" + n + uid(); });
+    }
+    if (Array.isArray(st.items)) {
+      const ids = new Set(s.structurer.cats.map((c) => c.id));
+      s.structurer.items = st.items.slice(0, 60).map((i) => { i = obj(i); return { id: uid(), label: str(i.label, 80), cat: ids.has(i.cat) ? i.cat : "" }; });
+    } else if (Array.isArray(st.cats)) {
+      s.structurer.items = s.structurer.items.map((i) => ({ ...i, cat: "" }));
+    }
+    const mi = obj(st.micro);
+    ["action", "succes", "erreur", "vide"].forEach((k) => { if (k in mi) s.structurer.micro[k] = str(mi[k], k === "action" ? 80 : 200); });
+    const pa = obj(x.parcours);
+    if ("objectif" in pa) s.parcours.objectif = str(pa.objectif, 300);
+    if ("depart" in pa) s.parcours.depart = str(pa.depart, 200);
+    if (Array.isArray(pa.steps)) {
+      s.parcours.steps = pa.steps.slice(0, 20).map((p) => { p = obj(p); return { id: uid(), nom: str(p.nom, 80), action: str(p.action, 300), resultat: str(p.resultat, 300), reponse: str(p.reponse, 300), probleme: str(p.probleme, 300), recup: str(p.recup, 300) }; });
+    }
+    const mq = obj(x.maquette);
+    ["titre", "description", "cta", "question"].forEach((k) => { if (k in mq) s.maquette[k] = str(mq[k], k === "description" || k === "question" ? 300 : 120); });
+    if (HEX6.test(mq.accent)) s.maquette.accent = mq.accent.toLowerCase();
+    if (["mobile", "wide"].includes(mq.vue)) s.maquette.vue = mq.vue;
+    if (Array.isArray(mq.blocks)) {
+      const seen = new Set(); const out = [];
+      mq.blocks.forEach((b) => { b = obj(b); if (BLOCK_DEFS.some((d) => d.id === b.id) && !seen.has(b.id)) { seen.add(b.id); out.push({ id: b.id, on: !!b.on }); } });
+      BLOCK_DEFS.forEach((d) => { if (!seen.has(d.id)) out.push({ id: d.id, on: false }); });
+      s.maquette.blocks = out;
+    }
+    const vf = obj(x.verifier);
+    const ch = obj(vf.checks);
+    s.verifier.checks = {};
+    VF_CHECKS.forEach((c) => { if (ch[c.id] === "ok" || ch[c.id] === "ko") s.verifier.checks[c.id] = ch[c.id]; });
+    if ("notes" in vf) s.verifier.notes = str(vf.notes, 800);
+    const ct = obj(vf.ct);
+    if (HEX6.test(ct.fg)) s.verifier.ct.fg = ct.fg.toLowerCase();
+    if (HEX6.test(ct.bg)) s.verifier.ct.bg = ct.bg.toLowerCase();
+    const te = obj(x.tester);
+    Object.keys(s.tester).forEach((k) => { if (k in te) s.tester[k] = str(te[k], k === "tache" || k === "fait" || k === "interpretation" ? 600 : 400); });
+    if (!["", "reussite", "hesitation", "blocage", "incertain"].includes(s.tester.resultat)) s.tester.resultat = "";
+    return s;
+  }
+
+  /* ---------- Stockage local (jamais de réseau) ---------- */
+  const KEEP_KEY = "interface-lab:keep";
+  const DATA_KEY = "interface-lab:v1";
+  let keep = false;
+  try { keep = window.localStorage.getItem(KEEP_KEY) === "1"; } catch (e) { keep = false; }
+  function store(local) {
+    try { const s = local ? window.localStorage : window.sessionStorage; s.setItem("__t", "1"); s.removeItem("__t"); return s; } catch (e) { return null; }
+  }
+  const activeStore = () => store(keep);
+  let state = (() => {
+    const st = activeStore();
+    if (!st) return defaults();
+    try { const raw = st.getItem(DATA_KEY); return raw ? sanitize(JSON.parse(raw)) : defaults(); } catch (e) { return defaults(); }
+  })();
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const clock = () => { const d = new Date(); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+  let saveTimer = 0;
+  function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 250); updateMarks(); }
+  function saveNow() {
+    clearTimeout(saveTimer);
+    const status = $("#save-status");
+    const st = activeStore();
+    if (!st) { status.textContent = "Le stockage du navigateur est indisponible : exporte ton journal pour ne rien perdre."; return; }
+    try { st.setItem(DATA_KEY, JSON.stringify(state)); status.textContent = (keep ? "Enregistré sur cet appareil" : "Enregistré pour cet onglet") + " à " + clock() + "."; }
+    catch (e) { status.textContent = "Enregistrement impossible (stockage plein ou bloqué). Exporte ton journal."; }
+  }
+  window.addEventListener("pagehide", saveNow);
+
+  /* ---------- Retours : toast et confirmation ---------- */
+  let toastTimer = 0; let undoFn = null;
+  function toast(text, opts) {
+    opts = opts || {};
+    const t = $("#toast");
+    $("#toast-text").textContent = text;
+    t.classList.toggle("err", !!opts.err);
+    const u = $("#toast-undo");
+    undoFn = opts.undo || null;
+    u.hidden = !undoFn;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; undoFn = null; }, undoFn ? 8000 : 4000);
+  }
+  $("#toast-undo").addEventListener("click", () => { const f = undoFn; undoFn = null; $("#toast").hidden = true; if (f) f(); });
+
+  function ask(title, text, okLabel) {
+    return new Promise((resolve) => {
+      const d = $("#confirm");
+      if (!d || typeof d.showModal !== "function") { resolve(window.confirm(text)); return; }
+      $("#confirm-title").textContent = title;
+      $("#confirm-text").textContent = text;
+      $("#confirm-ok").textContent = okLabel || "Confirmer";
+      d.returnValue = "";
+      d.addEventListener("close", () => resolve(d.returnValue === "ok"), { once: true });
+      d.showModal();
+      $("#confirm-cancel").focus();
+    });
+  }
+
+  function restoreSnapshot(snap, message) {
+    state = JSON.parse(snap);
+    renderAll(); saveNow();
+    toast(message || "Action annulée.");
+  }
+
+  /* ---------- Listes répétables (observations, catégories, contenus, étapes, blocs) ---------- */
+  const LISTS = {
+    obs: { arr: () => state.observer.items, render: () => renderObserver(), add: "#obs-add", noun: "l’observation" },
+    cat: { arr: () => state.structurer.cats, render: () => renderStructurer(), add: "#st-cat-add", noun: "la catégorie" },
+    item: { arr: () => state.structurer.items, render: () => renderStructurer(), add: "#st-item-add", noun: "le contenu" },
+    step: { arr: () => state.parcours.steps, render: () => renderParcours(), add: "#pa-add", noun: "l’étape" },
+    block: { arr: () => state.maquette.blocks, render: () => { renderBlocksUI(); renderWireframe(); }, add: null, noun: "le bloc" }
+  };
+  function moveBtns(list, id) {
+    const arr = LISTS[list].arr(); const i = arr.findIndex((x) => x.id === id);
+    return { up: i > 0, down: i < arr.length - 1 };
+  }
+  function toolsHTML(list, id, n) {
+    const m = moveBtns(list, id); const noun = LISTS[list].noun;
+    if (list === "block") {
+      return `<button type="button" class="btn small iconbtn" data-act="up" ${m.up ? "" : "disabled"} aria-label="Monter ${noun} ${n}"><span aria-hidden="true">↑</span></button>` +
+        `<button type="button" class="btn small iconbtn" data-act="down" ${m.down ? "" : "disabled"} aria-label="Descendre ${noun} ${n}"><span aria-hidden="true">↓</span></button>`;
+    }
+    const del = list === "block" ? "" : `<button type="button" class="btn small danger" data-act="del" aria-label="Supprimer ${noun} ${n}">Supprimer</button>`;
+    return `<button type="button" class="btn small" data-act="up" ${m.up ? "" : "disabled"} aria-label="Monter ${noun} ${n}"><span aria-hidden="true">↑</span> Monter</button>` +
+      `<button type="button" class="btn small" data-act="down" ${m.down ? "" : "disabled"} aria-label="Descendre ${noun} ${n}"><span aria-hidden="true">↓</span> Descendre</button>` + del;
+  }
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    const host = btn.closest("[data-list]");
+    if (!host) return;
+    const list = host.dataset.list; const id = host.dataset.id; const reg = LISTS[list];
+    const arr = reg.arr(); const i = arr.findIndex((x) => x.id === id);
+    if (i < 0) return;
+    const act = btn.dataset.act;
+    if (act === "up" || act === "down") {
+      const j = act === "up" ? i - 1 : i + 1;
+      if (j < 0 || j >= arr.length) return;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      reg.render(); scheduleSave();
+      const el = $(`[data-list="${list}"][data-id="${id}"]`);
+      let target = el && $(`[data-act="${act}"]:not([disabled])`, el);
+      if (!target && el) target = $(`[data-act="${act === "up" ? "down" : "up"}"]:not([disabled])`, el);
+      if (target) target.focus();
+      toast("Élément déplacé : position " + (j + 1) + " sur " + arr.length + ".");
+    } else if (act === "del") {
+      const snap = JSON.stringify(state);
+      arr.splice(i, 1);
+      if (list === "cat") state.structurer.items.forEach((it) => { if (it.cat === id) it.cat = ""; });
+      reg.render(); scheduleSave();
+      const addBtn = reg.add && $(reg.add); if (addBtn) addBtn.focus();
+      toast("Élément supprimé.", { undo: () => restoreSnapshot(snap, "Suppression annulée.") });
+    }
+  });
+  document.addEventListener("input", (e) => {
+    const el = e.target;
+    if (el.dataset && el.dataset.field) {
+      const host = el.closest("[data-list]"); if (!host) return;
+      const reg = LISTS[host.dataset.list]; const it = reg.arr().find((x) => x.id === host.dataset.id);
+      if (!it) return;
+      it[el.dataset.field] = el.value;
+      if (it.ex) { it.ex = false; const pill = $(".pill.ok", host); if (pill) pill.remove(); }
+      listInput(host.dataset.list, it, el);
+      scheduleSave();
+    } else if (el.dataset && el.dataset.bind) {
+      bound(el);
+    }
+  });
+  document.addEventListener("change", (e) => {
+    const el = e.target;
+    if (el.dataset && el.dataset.field && el.tagName === "SELECT") {
+      const host = el.closest("[data-list]"); if (!host) return;
+      const it = LISTS[host.dataset.list].arr().find((x) => x.id === host.dataset.id);
+      if (it) { it[el.dataset.field] = el.value; listInput(host.dataset.list, it, el); scheduleSave(); }
+    } else if (el.dataset && el.dataset.bind && el.type === "radio") {
+      bound(el);
+    } else if (el.dataset && el.dataset.block) {
+      const b = state.maquette.blocks.find((x) => x.id === el.dataset.block);
+      if (b) { b.on = el.checked; renderWireframe(); scheduleSave(); }
+    } else if (el.dataset && el.dataset.vf) {
+      if (el.value === "") delete state.verifier.checks[el.dataset.vf]; else state.verifier.checks[el.dataset.vf] = el.value;
+      renderVerifierSummary(); scheduleSave();
+    }
+  });
+  function listInput(list, it, el) {
+    if (list === "obs") renderObsSummary();
+    else if (list === "cat") { $$(`#st-items option[value="${it.id}"]`).forEach((o) => { o.textContent = it.name || "(sans nom)"; }); renderStructurerSide(); }
+    else if (list === "item") renderStructurerSide();
+    else if (list === "step") renderParcoursSide();
+  }
+  function bound(el) {
+    const path = el.dataset.bind;
+    if (el.type === "radio" && !el.checked) return;
+    set(state, path, el.value);
+    const mod = path.split(".")[0];
+    if (mod === "clarifier") renderClarifier();
+    else if (mod === "structurer") renderStructurerSide();
+    else if (mod === "parcours") renderParcoursSide();
+    else if (mod === "maquette") { renderWireframe(); if (path === "maquette.accent") $("#mq-accent-out").textContent = el.value.toUpperCase(); }
+    else if (mod === "tester") renderTester();
+    scheduleSave();
+  }
+  function syncBound() {
+    $$("[data-bind]").forEach((el) => {
+      const v = get(state, el.dataset.bind);
+      if (el.type === "radio") el.checked = el.value === v;
+      else el.value = v == null ? "" : v;
+    });
+    $("#mq-accent-out").textContent = state.maquette.accent.toUpperCase();
+  }
+  function addTo(list, make) {
+    const reg = LISTS[list]; const it = make(); it.id = uid();
+    reg.arr().push(it); reg.render(); scheduleSave();
+    const host = $(`[data-list="${list}"][data-id="${it.id}"]`);
+    const f = host && $("input, textarea, select", host); if (f) f.focus();
+  }
+
+  /* ---------- 01 Observer ---------- */
+  const PRIO = { haute: "Haute", moyenne: "Moyenne", basse: "Basse" };
+  function renderObserver() {
+    const items = state.observer.items;
+    $("#obs-list").innerHTML = items.length ? items.map((it, i) => {
+      const n = i + 1;
+      return `<article class="entry" data-list="obs" data-id="${it.id}" aria-label="Observation ${n}">
+        <div class="entry-head"><h3>Observation ${n} ${it.ex ? '<span class="pill ok">Exemple fictif</span>' : ""}</h3><div class="entry-tools">${toolsHTML("obs", it.id, n)}</div></div>
+        <div class="grid-2">
+          <div class="field"><label for="obs-${it.id}-sit">Situation</label><input type="text" id="obs-${it.id}-sit" data-field="situation" value="${esc(it.situation)}" maxlength="300" autocomplete="off"></div>
+          <div class="field"><label for="obs-${it.id}-act">Action de la personne</label><input type="text" id="obs-${it.id}-act" data-field="action" value="${esc(it.action)}" maxlength="300" autocomplete="off"></div>
+        </div>
+        <div class="field"><label for="obs-${it.id}-fri">Friction : ce qui coince</label><input type="text" id="obs-${it.id}-fri" data-field="friction" value="${esc(it.friction)}" maxlength="400" autocomplete="off"></div>
+        <div class="split">
+          <section class="pane fact"><span class="tag">FAIT OBSERVABLE</span><div class="field"><label for="obs-${it.id}-fai">Ce que tu as vu ou entendu</label><textarea id="obs-${it.id}-fai" data-field="fait" maxlength="600" rows="3">${esc(it.fait)}</textarea></div></section>
+          <section class="pane hypo"><span class="tag">HYPOTHÈSE</span><div class="field"><label for="obs-${it.id}-hyp">Ce que tu en conclus (à vérifier)</label><textarea id="obs-${it.id}-hyp" data-field="hypothese" maxlength="600" rows="3">${esc(it.hypothese)}</textarea></div></section>
+        </div>
+        <div class="field"><label for="obs-${it.id}-pri">Priorité pour la vérification</label>
+          <select id="obs-${it.id}-pri" data-field="priorite">${Object.keys(PRIO).map((k) => `<option value="${k}"${it.priorite === k ? " selected" : ""}>${PRIO[k]}</option>`).join("")}</select></div>
+      </article>`;
+    }).join("") : '<p class="empty">Aucune observation. Ajoute la première : décris une situation réelle, puis ce que tu as vu.</p>';
+    renderObsSummary();
+  }
+  function renderObsSummary() {
+    const order = { haute: 0, moyenne: 1, basse: 2 };
+    const list = state.observer.items.filter((i) => i.situation || i.action || i.friction || i.fait || i.hypothese)
+      .sort((a, b) => order[a.priorite] - order[b.priorite]);
+    const orphan = list.filter((i) => i.hypothese && !i.fait).length;
+    let html = list.length ? `<ul class="checklist">${list.map((i) => `<li><span class="badge ${i.priorite === "haute" ? "bad" : i.priorite === "moyenne" ? "warn" : "na"}">${PRIO[i.priorite]}</span><span>${esc(i.friction || i.situation || i.action || "(sans titre)")}${i.fait ? "" : '<br><small class="hint">Aucun fait noté pour cette observation.</small>'}</span></li>`).join("")}</ul>` : '<p class="empty">Rien à classer pour l’instant.</p>';
+    if (orphan) html += `<p class="hint" style="margin-top:10px"><span class="badge warn">À revoir</span> ${orphan} hypothèse${orphan > 1 ? "s" : ""} sans fait observé : note d’abord ce que tu as vu ou entendu.</p>`;
+    $("#obs-summary").innerHTML = html;
+  }
+  $("#obs-add").addEventListener("click", () => addTo("obs", () => ({ ex: false, situation: "", action: "", friction: "", fait: "", hypothese: "", priorite: "moyenne" })));
+
+  /* ---------- 02 Clarifier ---------- */
+  function renderClarifier() {
+    const c = state.clarifier; const out = $("#cl-output");
+    if (!c.contexte && !c.personne && !c.objectif && !c.contrainte && !c.critere) {
+      out.innerHTML = '<p class="empty">Remplis les champs : ton énoncé apparaît ici, avec quelques points à relire.</p>'; return;
+    }
+    const checks = [];
+    if (/\b(ajouter|créer|construire|développer|implémenter|chatbot|application|appli|bouton|menu|refonte|site web)\b/i.test(c.objectif)) checks.push(["warn", "Ton objectif semble contenir déjà une solution. Décris plutôt ce que la personne veut accomplir."]);
+    if (c.objectif && c.objectif.trim().length < 12) checks.push(["warn", "Objectif très court : ajoute le résultat que la personne veut obtenir."]);
+    if (c.critere && /(satisfait|aime|content|moderne|joli|beau|intuitif|agréable)/i.test(c.critere)) checks.push(["warn", "Ce critère exprime une opinion. Choisis une action que tu peux observer."]);
+    if (c.critere && c.critere.trim().length >= 15 && !checks.some((x) => /critère/i.test(x[1]))) checks.push(["ok", "Le critère de réussite est formulé."]);
+    if (!c.critere) checks.push(["warn", "Il manque un critère de réussite observable."]);
+    if (!c.personne) checks.push(["warn", "Précise la personne ou la situation concernée."]);
+    out.innerHTML = `<p class="label">Énoncé</p><p>${esc(c.personne || "[personne ?]")} veut ${esc(c.objectif || "[objectif ?]")}</p>
+      ${c.contexte ? `<p class="label">Contexte</p><p>${esc(c.contexte)}</p>` : ""}
+      ${c.contrainte ? `<p class="label">Contrainte</p><p>${esc(c.contrainte)}</p>` : ""}
+      ${c.critere ? `<p class="label">Réussite observable</p><p class="quote">${esc(c.critere)}</p>` : ""}
+      <p class="label">Points à relire</p><ul class="checklist">${checks.map((k) => `<li><span class="badge ${k[0]}">${k[0] === "ok" ? "OK" : "À revoir"}</span><span>${esc(k[1])}</span></li>`).join("")}</ul>`;
+  }
+
+  /* ---------- 03 Structurer ---------- */
+  function renderStructurer() {
+    const S = state.structurer;
+    $("#st-cats").innerHTML = S.cats.length ? S.cats.map((c, i) => `<div class="row-item" data-list="cat" data-id="${c.id}">
+      <div class="field"><label for="cat-${c.id}">Catégorie ${i + 1}</label><input type="text" id="cat-${c.id}" data-field="name" value="${esc(c.name)}" maxlength="40" autocomplete="off"></div>
+      <div class="tools">${toolsHTML("cat", c.id, i + 1)}</div></div>`).join("") : '<p class="empty">Aucune catégorie.</p>';
+    const opts = (sel) => `<option value=""${sel ? "" : " selected"}>— Sans catégorie —</option>` + S.cats.map((c) => `<option value="${c.id}"${sel === c.id ? " selected" : ""}>${esc(c.name || "(sans nom)")}</option>`).join("");
+    $("#st-items").innerHTML = S.items.length ? S.items.map((it, i) => `<div class="row-item" data-list="item" data-id="${it.id}">
+      <div class="field"><label for="it-${it.id}">Contenu ${i + 1}</label><input type="text" id="it-${it.id}" data-field="label" value="${esc(it.label)}" maxlength="80" autocomplete="off"></div>
+      <div class="field"><label for="itc-${it.id}">Catégorie du contenu ${i + 1}</label><select id="itc-${it.id}" data-field="cat">${opts(it.cat)}</select></div>
+      <div class="tools">${toolsHTML("item", it.id, i + 1)}</div></div>`).join("") : '<p class="empty">Aucun contenu. Ajoutes-en un par chose que la personne doit pouvoir trouver.</p>';
+    renderStructurerSide();
+  }
+  function renderStructurerSide() {
+    const S = state.structurer;
+    const groups = S.cats.map((c) => ({ name: c.name || "(sans nom)", items: S.items.filter((i) => i.cat === c.id) }));
+    const loose = S.items.filter((i) => !S.cats.some((c) => c.id === i.cat));
+    if (loose.length) groups.push({ name: "Sans catégorie", items: loose });
+    $("#st-preview").innerHTML = `<div class="navplan">${S.micro.action ? `<p>Action principale : <strong>« ${esc(S.micro.action)} »</strong></p>` : ""}${groups.map((g) => `<div><h4>${esc(g.name)}</h4>${g.items.length ? `<ul>${g.items.map((i) => `<li>${esc(i.label || "(sans libellé)")}</li>`).join("")}</ul>` : '<p class="hint">Vide</p>'}</div>`).join("")}</div>`;
+    $("#st-cat-count").textContent = `${S.cats.length} catégorie${S.cats.length > 1 ? "s" : ""} · ${S.items.length} contenu${S.items.length > 1 ? "s" : ""}`;
+    const checks = [];
+    if (S.cats.length < 3 || S.cats.length > 6) checks.push(["warn", "Vise trois à six catégories : " + S.cats.length + " pour l’instant."]);
+    S.cats.filter((c) => c.name.trim().length > 20).forEach((c) => checks.push(["warn", "Nom de catégorie long : « " + c.name + " »."]));
+    S.cats.filter((c) => !S.items.some((i) => i.cat === c.id)).forEach((c) => checks.push(["warn", "Catégorie vide : « " + (c.name || "(sans nom)") + " »."]));
+    if (loose.length) checks.push(["warn", loose.length + " contenu" + (loose.length > 1 ? "s" : "") + " sans catégorie."]);
+    const seen = {}; S.items.forEach((i) => { const k = i.label.trim().toLowerCase(); if (k) seen[k] = (seen[k] || 0) + 1; });
+    Object.keys(seen).filter((k) => seen[k] > 1).forEach((k) => checks.push(["warn", "Libellé en double : « " + k + " »."]));
+    const generic = /^(succ[eè]s|erreur|ok|valider|invalide|saisie invalide|envoyer)\W*$/i;
+    ["action", "succes", "erreur", "vide"].forEach((k) => { if (S.micro[k] && generic.test(S.micro[k].trim())) checks.push(["warn", "Microcopy trop générique : « " + S.micro[k].trim() + " ». Dis ce qui se passe et la suite."]); });
+    if (!S.micro.action.trim()) checks.push(["warn", "Libellé de l’action principale manquant."]);
+    if (!checks.length) checks.push(["ok", "Aucun point évident à relire. Fais-le tester : ce contrôle ne remplace pas une personne."]);
+    $("#st-checks").innerHTML = `<ul class="checklist">${checks.map((k) => `<li><span class="badge ${k[0]}">${k[0] === "ok" ? "OK" : "À revoir"}</span><span>${esc(k[1])}</span></li>`).join("")}</ul>`;
+  }
+  $("#st-cat-add").addEventListener("click", () => addTo("cat", () => ({ name: "" })));
+  $("#st-item-add").addEventListener("click", () => addTo("item", () => ({ label: "", cat: "" })));
+
+  /* ---------- 04 Parcours & états ---------- */
+  function renderParcours() {
+    const steps = state.parcours.steps;
+    $("#pa-steps").innerHTML = steps.length ? steps.map((s, i) => { const n = i + 1; return `<article class="entry" data-list="step" data-id="${s.id}" aria-label="Étape ${n}">
+      <div class="entry-head"><h3>Étape ${n}</h3><div class="entry-tools">${toolsHTML("step", s.id, n)}</div></div>
+      <div class="field"><label for="st-${s.id}-n">Nom de l’étape</label><input type="text" id="st-${s.id}-n" data-field="nom" value="${esc(s.nom)}" maxlength="80" autocomplete="off"></div>
+      <div class="grid-2">
+        <div class="field"><label for="st-${s.id}-a">Action de la personne</label><textarea id="st-${s.id}-a" data-field="action" maxlength="300" rows="2">${esc(s.action)}</textarea></div>
+        <div class="field"><label for="st-${s.id}-r">Résultat attendu</label><textarea id="st-${s.id}-r" data-field="resultat" maxlength="300" rows="2">${esc(s.resultat)}</textarea></div>
+      </div>
+      <div class="field"><label for="st-${s.id}-s">Réponse du système</label><textarea id="st-${s.id}-s" data-field="reponse" maxlength="300" rows="2">${esc(s.reponse)}</textarea></div>
+      <div class="grid-2">
+        <div class="field"><label for="st-${s.id}-p">Problème possible</label><textarea id="st-${s.id}-p" data-field="probleme" maxlength="300" rows="2">${esc(s.probleme)}</textarea></div>
+        <div class="field"><label for="st-${s.id}-c">Récupération</label><textarea id="st-${s.id}-c" data-field="recup" maxlength="300" rows="2">${esc(s.recup)}</textarea></div>
+      </div></article>`; }).join("") : '<p class="empty">Aucune étape. Ajoute la première : que fait la personne en premier ?</p>';
+    renderParcoursSide();
+  }
+  function renderParcoursSide() {
+    const steps = state.parcours.steps; const P = state.parcours;
+    $("#pa-count").textContent = steps.length + " étape" + (steps.length > 1 ? "s" : "") + (steps.length > 7 ? " : un parcours long mérite d’être justifié." : "");
+    $("#pa-preview").innerHTML = (P.depart ? `<p class="hint">Départ : ${esc(P.depart)}</p>` : "") + (steps.length ? `<ol class="flow">${steps.map((s, i) => `<li data-n="${i + 1}"><span><strong>${esc(s.nom || "(sans nom)")}</strong><br>${esc(s.action)}${s.resultat ? " → " + esc(s.resultat) : ""}${s.probleme ? `<span class="recov">Si : ${esc(s.probleme)}${s.recup ? " → " + esc(s.recup) : ""}</span>` : ""}</span></li>`).join("")}</ol>` : '<p class="empty">Le parcours est vide.</p>') + (P.objectif ? `<p class="hint">But : ${esc(P.objectif)}</p>` : "");
+    const checks = [];
+    steps.forEach((s, i) => {
+      const n = i + 1;
+      if (s.probleme.trim() && !s.recup.trim()) checks.push(["bad", "Étape " + n + " : un problème est noté sans récupération. La personne est coincée."]);
+      if (!s.probleme.trim()) checks.push(["warn", "Étape " + n + " : aucun problème imaginé. Que se passe-t-il si ça échoue ?"]);
+      if (!s.reponse.trim()) checks.push(["warn", "Étape " + n + " : la réponse du système n’est pas décrite."]);
+      if (!s.resultat.trim()) checks.push(["warn", "Étape " + n + " : le résultat attendu manque."]);
+    });
+    if (steps.length && !checks.length) checks.push(["ok", "Chaque étape a une réponse et une récupération. Teste avec une personne."]);
+    if (!steps.length) checks.push(["warn", "Ajoute au moins une étape."]);
+    $("#pa-checks").innerHTML = `<ul class="checklist">${checks.map((k) => `<li><span class="badge ${k[0]}">${k[0] === "ok" ? "OK" : k[0] === "bad" ? "Impasse" : "À revoir"}</span><span>${esc(k[1])}</span></li>`).join("")}</ul>`;
+  }
+  $("#pa-add").addEventListener("click", () => addTo("step", () => ({ nom: "", action: "", resultat: "", reponse: "", probleme: "", recup: "" })));
+  $("#pa-copy").addEventListener("click", () => {
+    const P = state.parcours;
+    const t = ["PARCOURS — " + (P.objectif || "(sans objectif)"), "Départ : " + (P.depart || "—"), ""].concat(P.steps.map((s, i) => `${i + 1}. ${s.nom || "(sans nom)"}\n   Action : ${s.action || "—"}\n   Résultat attendu : ${s.resultat || "—"}\n   Réponse du système : ${s.reponse || "—"}\n   Problème possible : ${s.probleme || "—"}\n   Récupération : ${s.recup || "—"}`)).join("\n");
+    copyText(t, "Résumé du parcours copié.");
+  });
+
+  /* ---------- 05 Maquette ---------- */
+  const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const lum = (h) => { const [r, g, b] = rgb(h); return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b); };
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const fmt = (r) => (Math.floor(r * 100) / 100).toFixed(2).replace(".", ",");
+  function renderBlocksUI() {
+    $("#mq-blocks").innerHTML = state.maquette.blocks.map((b, i) => { const d = BLOCK_DEFS.find((x) => x.id === b.id); return `<div class="blockrow" data-list="block" data-id="${b.id}"><label><input type="checkbox" data-block="${b.id}" ${b.on ? "checked" : ""}><span>${esc(d.label)}</span></label>${toolsHTML("block", b.id, i + 1)}</div>`; }).join("");
+  }
+  function renderWireframe() {
+    const m = state.maquette; const S = state.structurer;
+    const wf = $("#wf");
+    wf.className = "wf " + (m.vue === "wide" ? "is-wide" : "is-mobile");
+    $("#wf-label").textContent = m.vue === "wide" ? "ORDINATEUR · ~760 PX" : "TÉLÉPHONE · ~360 PX";
+    const fg = ratio(m.accent, "#ffffff") >= ratio(m.accent, "#11202b") ? "#ffffff" : "#11202b";
+    const r = ratio(m.accent, fg);
+    $("#mq-contrast").innerHTML = `<span class="badge ${r >= 4.5 ? "ok" : "bad"}">${r >= 4.5 ? "OK" : "Insuffisant"}</span> Libellé ${fg === "#ffffff" ? "blanc" : "foncé"} sur cette couleur : ${fmt(r)} : 1. Repère pour du texte courant : 4,5 : 1.`;
+    const labels = S.items.slice(0, 3);
+    const cards = [0, 1, 2].map((i) => { const it = labels[i]; const cat = it && S.cats.find((c) => c.id === it.cat);
+      return `<div class="wf-card"><b>${esc(it ? it.label || "Contenu à nommer" : "Contenu à nommer")}</b><span>${esc(cat ? cat.name : "Catégorie")}</span><i class="wf-bar"></i><i class="wf-bar short"></i></div>`; }).join("");
+    const parts = { cards: `<div class="wf-cards">${cards}</div>`,
+      compare: `<div class="wf-block">Comparer les options<small>Deux ressources côte à côte : niveau, durée, format.</small></div>`,
+      help: `<div class="wf-help">${esc(S.micro.vide || "Rien ne correspond ? Change d’objectif ou efface les filtres.")}</div>`,
+      next: `<div class="wf-block">Ma prochaine étape<small>${esc(S.micro.succes || "La ressource gardée apparaît ici.")}</small></div>` };
+    wf.innerHTML = `<div class="wf-head"><span>Passerelle</span><span class="nav" aria-hidden="true"><i></i><i></i><i></i></span></div>
+      <h4>${esc(m.titre || "Titre à écrire")}</h4><p class="desc">${esc(m.description || "Phrase d’explication à écrire.")}</p>
+      <span class="wf-cta" style="background:${m.accent};color:${fg}">${esc(m.cta || "Action")}</span>
+      ${m.blocks.filter((b) => b.on).map((b) => parts[b.id]).join("")}`;
+    $("#mq-order").innerHTML = ["Titre : " + (m.titre || "—"), "Phrase d’explication", "Action principale : « " + (m.cta || "—") + " »"].concat(m.blocks.filter((b) => b.on).map((b) => BLOCK_DEFS.find((d) => d.id === b.id).label)).map((t) => `<li>${esc(t)}</li>`).join("");
+  }
+
+  /* ---------- 06 Vérifier ---------- */
+  function normHex(v) {
+    v = String(v).trim().replace(/^#/, "");
+    if (/^[0-9a-fA-F]{3}$/.test(v)) v = v.split("").map((c) => c + c).join("");
+    return /^[0-9a-fA-F]{6}$/.test(v) ? "#" + v.toLowerCase() : null;
+  }
+  function renderContrast() {
+    const { fg, bg } = state.verifier.ct;
+    $("#ct-fg").value = fg; $("#ct-bg").value = bg;
+    const sample = $("#ct-sample"); sample.style.color = fg; sample.style.background = bg;
+    const r = ratio(fg, bg);
+    $("#ct-ratio").textContent = fmt(r) + " : 1";
+    const rows = [["Texte courant (AA)", 4.5], ["Grand texte, 24 px ou 19 px gras (AA)", 3], ["Contour d’un contrôle ou icône (AA)", 3], ["Texte courant renforcé (AAA)", 7]];
+    $("#ct-crit").innerHTML = rows.map(([t, min]) => `<li><span class="badge ${r >= min ? "ok" : "bad"}">${r >= min ? "Atteint" : "Non atteint"}</span><span>${t} : ${fmt(min).replace(",00", "").replace(",50", ",5")} : 1</span></li>`).join("");
+    const sg = $("#ct-suggest"); sg.innerHTML = "";
+    if (r < 4.5) {
+      const target = ratio(bg, "#ffffff") >= ratio(bg, "#000000") ? [255, 255, 255] : [0, 0, 0];
+      const base = rgb(fg); let found = null;
+      for (let t = 0.02; t <= 1.0001; t += 0.02) {
+        const c = "#" + base.map((v, i) => Math.round(v + (target[i] - v) * t).toString(16).padStart(2, "0")).join("");
+        if (ratio(c, bg) >= 4.5) { found = c; break; }
+      }
+      if (found) sg.innerHTML = `<p class="hint"><span class="badge warn">Piste</span> Une couleur de texte proche qui atteint 4,5 : 1 : <strong>${found.toUpperCase()}</strong> (${fmt(ratio(found, bg))} : 1). <button type="button" class="btn small" data-apply-fg="${found}">Utiliser cette couleur</button></p>`;
+    }
+  }
+  function setContrast(which, hex) { state.verifier.ct[which] = hex; renderContrast(); scheduleSave(); }
+  ["fg", "bg"].forEach((w) => {
+    const pick = $("#ct-" + w), txt = $("#ct-" + w + "-hex"), err = $("#ct-" + w + "-err");
+    pick.addEventListener("input", () => { txt.value = pick.value.toUpperCase(); txt.setAttribute("aria-invalid", "false"); err.hidden = true; setContrast(w, pick.value.toLowerCase()); });
+    txt.addEventListener("input", () => {
+      const h = normHex(txt.value);
+      if (h) { txt.setAttribute("aria-invalid", "false"); err.hidden = true; setContrast(w, h); }
+      else { txt.setAttribute("aria-invalid", "true"); err.hidden = false; err.textContent = "Entre une couleur hexadécimale, par exemple #287BFF."; }
+    });
+    txt.addEventListener("blur", () => { const h = normHex(txt.value); if (h) txt.value = h.toUpperCase(); });
+  });
+  function syncContrastInputs() { $("#ct-fg-hex").value = state.verifier.ct.fg.toUpperCase(); $("#ct-bg-hex").value = state.verifier.ct.bg.toUpperCase(); ["fg", "bg"].forEach((w) => { $("#ct-" + w + "-hex").setAttribute("aria-invalid", "false"); $("#ct-" + w + "-err").hidden = true; }); }
+  $("#ct-swap").addEventListener("click", () => { const c = state.verifier.ct; [c.fg, c.bg] = [c.bg, c.fg]; syncContrastInputs(); renderContrast(); scheduleSave(); toast("Texte et fond inversés."); });
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-apply-fg]"); if (b) { state.verifier.ct.fg = b.dataset.applyFg; syncContrastInputs(); renderContrast(); scheduleSave(); toast("Couleur de texte mise à jour."); } });
+
+  function buildVerifier() {
+    $("#vf-checks").innerHTML = VF_CHECKS.map((c, i) => `<fieldset class="field seg"><legend>${i + 1}. ${esc(c.q)}</legend><div class="segrow">
+      <label class="segitem"><input type="radio" name="vf-${c.id}" value="ok" data-vf="${c.id}"><span>Vérifié : OK</span></label>
+      <label class="segitem"><input type="radio" name="vf-${c.id}" value="ko" data-vf="${c.id}"><span>À revoir</span></label>
+      <label class="segitem"><input type="radio" name="vf-${c.id}" value="" data-vf="${c.id}" checked><span>Non vérifié</span></label></div></fieldset>`).join("");
+  }
+  function syncVerifier() {
+    VF_CHECKS.forEach((c) => { const v = state.verifier.checks[c.id] || ""; $$(`input[data-vf="${c.id}"]`).forEach((r) => { r.checked = r.value === v; }); });
+  }
+  function renderVerifierSummary() {
+    const ch = state.verifier.checks;
+    const ok = VF_CHECKS.filter((c) => ch[c.id] === "ok").length; const ko = VF_CHECKS.filter((c) => ch[c.id] === "ko");
+    const none = VF_CHECKS.length - ok - ko.length;
+    $("#vf-summary").innerHTML = `<ul class="checklist"><li><span class="badge ok">${ok}</span><span>vérifié${ok > 1 ? "s" : ""} : OK</span></li><li><span class="badge warn">${ko.length}</span><span>à revoir</span></li><li><span class="badge na">${none}</span><span>non vérifié${none > 1 ? "s" : ""}</span></li></ul>` +
+      (ko.length ? `<p class="label" style="margin-top:12px">À revoir</p><ul class="plain">${ko.map((c) => `<li>${esc(c.q)}</li>`).join("")}</ul>` : "") +
+      `<p class="hint" style="margin-top:10px">Le contraste se lit au-dessus, dans sa propre carte.</p>`;
+  }
+
+  /* ---------- 07 Tester & améliorer ---------- */
+  const RES = { reussite: "Réussite", hesitation: "Hésitation", blocage: "Blocage", incertain: "Incertain" };
+  function renderTester() {
+    const t = state.tester; const out = $("#te-synthese");
+    if (!Object.keys(t).some((k) => t[k])) { out.innerHTML = '<p class="empty">Remplis le test : la synthèse sépare toujours le fait de l’interprétation.</p>'; return; }
+    const w = [];
+    if (t.resultat === "reussite" && t.aide.trim()) w.push("Une aide a été donnée : ce n’est peut-être pas une réussite autonome.");
+    if (t.interpretation.trim() && !t.fait.trim()) w.push("Une interprétation sans fait : note d’abord ce que tu as observé.");
+    if (t.amelioration.trim() && !t.verification.trim()) w.push("Comment sauras-tu que ce changement aide ? Précise la vérification.");
+    out.innerHTML = `<p class="label">Tâche</p><p>${esc(t.tache || "—")}</p>${t.contexte ? `<p class="muted">${esc(t.contexte)}</p>` : ""}
+      <p class="label">Résultat observé</p><p>${esc(RES[t.resultat] || "Non précisé")}</p>
+      <div class="pane fact"><span class="tag">OBSERVATION / FAIT</span><p>${esc(t.fait || "—")}</p>${t.citation ? `<p class="quote">« ${esc(t.citation)} »</p>` : ""}${t.aide ? `<p class="muted">Aide donnée : ${esc(t.aide)}</p>` : ""}</div>
+      <div class="pane hypo"><span class="tag">INTERPRÉTATION</span><p>${esc(t.interpretation || "—")}</p><p class="muted">À essayer : ${esc(t.amelioration || "—")}</p><p class="muted">Pour vérifier : ${esc(t.verification || "—")}</p></div>
+      ${w.map((x) => `<p class="hint"><span class="badge warn">À revoir</span> ${esc(x)}</p>`).join("")}`;
+  }
+  $("#te-copy").addEventListener("click", () => {
+    const t = state.tester;
+    copyText(["TEST — " + (t.tache || "(sans consigne)"), "Contexte : " + (t.contexte || "—"), "Résultat observé : " + (RES[t.resultat] || "non précisé"), "", "OBSERVATION / FAIT", t.fait || "—", t.citation ? "Paroles : « " + t.citation + " »" : "", t.aide ? "Aide donnée : " + t.aide : "", "", "INTERPRÉTATION (hypothèse à vérifier)", t.interpretation || "—", "À essayer : " + (t.amelioration || "—"), "Pour vérifier : " + (t.verification || "—")].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n"), "Synthèse du test copiée.");
+  });
+
+  /* ---------- Copier ---------- */
+  function copyText(text, okMsg) {
+    const fallback = () => {
+      const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand("copy"); } catch (e) { ok = false; } ta.remove();
+      toast(ok ? okMsg : "Copie impossible : exporte ton journal à la place.", { err: !ok });
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => toast(okMsg), fallback); else fallback();
+  }
+
+  /* ---------- Export, import, effacement ---------- */
+  function download(name, mime, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: mime }));
+    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+  const today = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+  $("#export-json").addEventListener("click", () => {
+    download("interface-lab-journal-" + today() + ".json", "application/json", JSON.stringify({ app: "interface-lab", version: 1, exportedAt: new Date().toISOString(), data: state }, null, 2));
+    toast("Journal exporté (JSON). Relis-le avant de le partager.");
+  });
+  function toMarkdown() {
+    const S = state; const L = [];
+    const line = (k, v) => v && v.trim() ? "- **" + k + "** : " + v.trim().replace(/\n+/g, " ") : "";
+    L.push("# Journal INTERFACE LAB — " + today(), "", "_Travail personnel. Les faits et les hypothèses restent séparés._", "");
+    L.push("## 01 Observer", "");
+    S.observer.items.forEach((i, n) => { L.push("### Observation " + (n + 1) + " (priorité " + PRIO[i.priorite].toLowerCase() + ")", line("Situation", i.situation), line("Action", i.action), line("Friction", i.friction), line("FAIT", i.fait), line("HYPOTHÈSE", i.hypothese), ""); });
+    L.push("## 02 Clarifier", "", line("Contexte", S.clarifier.contexte), line("Personne concernée", S.clarifier.personne), line("Objectif", S.clarifier.objectif), line("Contrainte", S.clarifier.contrainte), line("Critère de réussite", S.clarifier.critere), "");
+    L.push("## 03 Structurer", "");
+    S.structurer.cats.forEach((c) => { L.push("### " + (c.name || "(sans nom)")); S.structurer.items.filter((i) => i.cat === c.id).forEach((i) => L.push("- " + (i.label || "(sans libellé)"))); L.push(""); });
+    const loose = S.structurer.items.filter((i) => !S.structurer.cats.some((c) => c.id === i.cat));
+    if (loose.length) { L.push("### Sans catégorie"); loose.forEach((i) => L.push("- " + (i.label || "(sans libellé)"))); L.push(""); }
+    const mi = S.structurer.micro; L.push("### Microcopy", line("Action principale", mi.action), line("Réussite", mi.succes), line("Échec", mi.erreur), line("Aucun résultat", mi.vide), "");
+    L.push("## 04 Parcours & états", "", line("Objectif", S.parcours.objectif), line("Départ", S.parcours.depart), "");
+    S.parcours.steps.forEach((s, n) => { L.push("### " + (n + 1) + ". " + (s.nom || "(sans nom)"), line("Action", s.action), line("Résultat attendu", s.resultat), line("Réponse du système", s.reponse), line("Problème possible", s.probleme), line("Récupération", s.recup), ""); });
+    const m = S.maquette; L.push("## 05 Maquette", "", line("Titre", m.titre), line("Explication", m.description), line("Action principale", m.cta), line("Couleur de l’action", m.accent), line("Vue", m.vue === "wide" ? "ordinateur" : "téléphone"), line("Blocs (dans l’ordre)", m.blocks.filter((b) => b.on).map((b) => BLOCK_DEFS.find((d) => d.id === b.id).label).join(" → ")), line("Question à poser", m.question), "");
+    L.push("## 06 Vérifier", "", "_Premier contrôle personnel : ce n’est pas un audit WCAG._", "");
+    const ct = S.verifier.ct; L.push("- **Contraste** " + ct.fg.toUpperCase() + " sur " + ct.bg.toUpperCase() + " : " + fmt(ratio(ct.fg, ct.bg)) + " : 1");
+    VF_CHECKS.forEach((c) => { const v = S.verifier.checks[c.id]; L.push("- [" + (v === "ok" ? "x" : " ") + "] " + c.q + (v === "ko" ? " — À REVOIR" : v === "ok" ? "" : " — non vérifié")); });
+    L.push(line("Notes", S.verifier.notes), "");
+    const t = S.tester; L.push("## 07 Tester & améliorer", "", line("Consigne", t.tache), line("Contexte", t.contexte), line("Résultat", RES[t.resultat] || ""), "", "**OBSERVATION / FAIT**", line("Fait", t.fait), line("Paroles", t.citation), line("Aide donnée", t.aide), "", "**INTERPRÉTATION**", line("Interprétation", t.interpretation), line("Prochaine amélioration", t.amelioration), line("Vérification", t.verification), "");
+    return L.filter((l, i, a) => l !== "" || (a[i - 1] !== "" && i > 0)).join("\n") + "\n";
+  }
+  $("#export-md").addEventListener("click", () => { download("interface-lab-journal-" + today() + ".md", "text/markdown", toMarkdown()); toast("Journal exporté (Markdown). Relis-le avant de le partager."); });
+  $("#import-btn").addEventListener("click", () => $("#import-file").click());
+  $("#import-file").addEventListener("change", async (e) => {
+    const f = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    if (f.size > 600000) { toast("Ce fichier est trop volumineux pour un journal INTERFACE LAB.", { err: true }); return; }
+    let data;
+    try { const j = JSON.parse(await f.text()); data = j && j.app === "interface-lab" && j.data ? j.data : null; if (!data || typeof data !== "object") throw new Error("format"); }
+    catch (err) { toast("Ce fichier n’est pas un journal INTERFACE LAB valide (JSON exporté depuis le Lab).", { err: true }); return; }
+    const okGo = await ask("Remplacer ton travail ?", "L’import remplace tout ce qui est affiché dans le Lab. Exporte d’abord ton journal si tu veux le garder.", "Remplacer");
+    if (!okGo) return;
+    const snap = JSON.stringify(state);
+    state = sanitize(data); renderAll(); saveNow();
+    toast("Journal importé.", { undo: () => restoreSnapshot(snap, "Import annulé.") });
+  });
+  $("#clear-all").addEventListener("click", async () => {
+    const okGo = await ask("Tout effacer ?", "Cela remet le Lab à zéro, avec l’exemple fictif de Passerelle. Tes saisies actuelles seront perdues, sauf si tu les as exportées.", "Tout effacer");
+    if (!okGo) return;
+    const snap = JSON.stringify(state);
+    state = defaults(); renderAll(); saveNow();
+    toast("Le Lab est remis à zéro.", { undo: () => restoreSnapshot(snap, "Réinitialisation annulée.") });
+  });
+  $("#keep").addEventListener("change", (e) => {
+    const on = e.target.checked;
+    if (on) {
+      if (!store(true)) { e.target.checked = false; toast("Ce navigateur bloque le stockage sur l’appareil. Utilise l’export.", { err: true }); return; }
+      keep = true; try { localStorage.setItem(KEEP_KEY, "1"); } catch (x) { /* ignoré */ }
+      try { sessionStorage.removeItem(DATA_KEY); } catch (x) { /* ignoré */ }
+      saveNow(); toast("Tes notes sont gardées sur cet appareil.");
+    } else {
+      keep = false; try { localStorage.removeItem(KEEP_KEY); localStorage.removeItem(DATA_KEY); } catch (x) { /* ignoré */ }
+      saveNow(); toast("Tes notes ne seront plus gardées après la fermeture de l’onglet.");
+    }
+  });
+
+  /* ---------- Navigation entre modules ---------- */
+  let current = "observer";
+  function hasContent(id) {
+    const d = defaults(); const S = state;
+    switch (id) {
+      case "observer": return S.observer.items.some((i) => !i.ex && (i.situation || i.action || i.friction || i.fait || i.hypothese));
+      case "clarifier": return Object.values(S.clarifier).some(Boolean);
+      case "structurer": return JSON.stringify(S.structurer) !== JSON.stringify(d.structurer);
+      case "parcours": return JSON.stringify(S.parcours) !== JSON.stringify(d.parcours);
+      case "maquette": return JSON.stringify(S.maquette) !== JSON.stringify(d.maquette);
+      case "verifier": return Object.keys(S.verifier.checks).length > 0 || !!S.verifier.notes || JSON.stringify(S.verifier.ct) !== JSON.stringify(d.verifier.ct);
+      case "tester": return Object.values(S.tester).some(Boolean);
+      default: return false;
+    }
+  }
+  function updateMarks() {
+    const idx = MODULES.findIndex((m) => m.id === current);
+    MODULES.forEach((m, i) => {
+      $("#tab-" + m.id + " .mark").hidden = !hasContent(m.id);
+      const bar = $$("#progress i")[i]; bar.className = m.id === current ? "on" : hasContent(m.id) ? "done" : "";
+    });
+    $("#progress-text").textContent = "Module " + (idx + 1) + " sur 7 · " + MODULES[idx].label;
+  }
+  function showModule(id, opts) {
+    opts = opts || {};
+    if (!MODULES.some((m) => m.id === id)) id = "observer";
+    current = id;
+    MODULES.forEach((m) => {
+      const on = m.id === id; $("#panel-" + m.id).hidden = !on;
+      const t = $("#tab-" + m.id); t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1;
+    });
+    document.title = MODULES.find((m) => m.id === id).label + " — INTERFACE LAB";
+    if (id === "maquette") { renderBlocksUI(); renderWireframe(); }
+    if (id === "structurer") renderStructurerSide();
+    updateMarks();
+    const t = $("#tab-" + id); if (t.scrollIntoView) t.scrollIntoView({ block: "nearest", inline: "center" });
+    if (opts.focus) { const h = $("#panel-" + id + " h2"); h.focus({ preventScroll: true }); $("#panel-" + id).scrollIntoView({ block: "start" }); }
+  }
+  let lastTabNav = 0;
+  function go(id, viaTab) {
+    if (viaTab) lastTabNav = Date.now();
+    showModule(id, { focus: !viaTab });
+    if (location.hash !== "#" + id) location.hash = id;
+  }
+  MODULES.forEach((m, i) => {
+    $("#tab-" + m.id).addEventListener("click", () => go(m.id, true));
+    $("#tab-" + m.id).addEventListener("keydown", (e) => {
+      let j = null;
+      if (e.key === "ArrowRight") j = (i + 1) % MODULES.length; else if (e.key === "ArrowLeft") j = (i + MODULES.length - 1) % MODULES.length;
+      else if (e.key === "Home") j = 0; else if (e.key === "End") j = MODULES.length - 1;
+      if (j !== null) { e.preventDefault(); go(MODULES[j].id, true); $("#tab-" + MODULES[j].id).focus(); }
+    });
+    const pager = document.createElement("div"); pager.className = "btnrow pager";
+    pager.innerHTML = (i > 0 ? `<button type="button" class="btn" data-go="${MODULES[i - 1].id}"><span aria-hidden="true">←</span> Module précédent : ${esc(MODULES[i - 1].label)}</button>` : "") +
+      (i < MODULES.length - 1 ? `<button type="button" class="btn primary" data-go="${MODULES[i + 1].id}">Module suivant : ${esc(MODULES[i + 1].label)} <span aria-hidden="true">→</span></button>` : `<button type="button" class="btn primary" data-go="__journal">Aller à l’export de mon journal</button>`);
+    $("#panel-" + m.id).appendChild(pager);
+  });
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-go]"); if (!b) return;
+    if (b.dataset.go === "__journal") { $("#journal-title").scrollIntoView({ block: "start" }); $("#export-json").focus(); } else go(b.dataset.go);
+  });
+  window.addEventListener("hashchange", () => showModule(location.hash.slice(1), { focus: Date.now() - lastTabNav > 500 }));
+
+  /* ---------- Démarrage ---------- */
+  function renderAll() {
+    syncBound(); renderObserver(); renderClarifier(); renderStructurer(); renderParcours();
+    renderBlocksUI(); renderWireframe(); syncContrastInputs(); renderContrast(); syncVerifier(); renderVerifierSummary(); renderTester(); updateMarks();
+  }
+  buildVerifier();
+  $("#keep").checked = keep;
+  renderAll();
+  showModule(location.hash.slice(1) || "observer");
+  const st0 = activeStore();
+  $("#save-status").textContent = st0 ? (keep ? "Notes gardées sur cet appareil." : "Les notes restent dans cet onglet et disparaissent quand tu le fermes.") : "Le stockage du navigateur est indisponible : exporte ton journal pour ne rien perdre.";
+})();
+
+</script>
+</body>
+</html>
